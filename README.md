@@ -88,6 +88,8 @@ go build -o load2db-go .
 
 ## Database Schema
 
+**Note:** The table name is fixed to `wiktionary_words` and cannot be configured via command line flags.
+
 The tool creates a table `wiktionary_words` with the following structure:
 
 ```sql

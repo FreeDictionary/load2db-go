@@ -14,6 +14,9 @@ import (
 )
 
 var (
+	// Raw data path flag (defined in parent command)
+	RawDataPath string
+
 	// Database connection flags
 	dbHost     string
 	dbPort     uint16
@@ -70,8 +73,7 @@ func runImport(cmd *cobra.Command, args []string) error {
 	}()
 
 	// Get raw data path from parent command
-	rawDataPath, _ := cmd.Flags().GetString("raw-data")
-	if rawDataPath == "" {
+	if RawDataPath == "" {
 		return fmt.Errorf("raw-data flag is required")
 	}
 
@@ -119,7 +121,7 @@ func runImport(cmd *cobra.Command, args []string) error {
 	})
 
 	// Check if path is a file or directory
-	info, err := os.Stat(rawDataPath)
+	info, err := os.Stat(RawDataPath)
 	if err != nil {
 		return fmt.Errorf("failed to stat path: %w", err)
 	}
@@ -128,11 +130,11 @@ func runImport(cmd *cobra.Command, args []string) error {
 	var totalInserted int64
 
 	if info.IsDir() {
-		log.Printf("Importing all JSONL files from directory: %s", rawDataPath)
-		totalInserted, err = importer.ImportDirectory(ctx, rawDataPath)
+		log.Printf("Importing all JSONL files from directory: %s", RawDataPath)
+		totalInserted, err = importer.ImportDirectory(ctx, RawDataPath)
 	} else {
-		log.Printf("Importing file: %s", rawDataPath)
-		totalInserted, err = importer.ImportFile(ctx, rawDataPath)
+		log.Printf("Importing file: %s", RawDataPath)
+		totalInserted, err = importer.ImportFile(ctx, RawDataPath)
 	}
 
 	if err != nil {
